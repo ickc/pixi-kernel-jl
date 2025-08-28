@@ -1,0 +1,16 @@
+{
+  "display_name": "Julia (Pixi)",
+  "argv": [
+    "pixi",
+    "run",
+    "julia",
+    "--interactive",
+    "--color=yes",
+    "--eval",
+    "import IJulia; IJulia.run_kernel()",
+    "{connection_file}"
+  ],
+  "language": "julia",
+  "env": {},
+  "interrupt_mode": "signal"
+}

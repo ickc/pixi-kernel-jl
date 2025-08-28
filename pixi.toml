@@ -1,0 +1,41 @@
+[workspace]
+channels = ["conda-forge"]
+platforms = ["win-64", "linux-64", "linux-aarch64", "osx-64", "osx-arm64"]
+
+[tasks]
+# resolve
+resolve = { cmd = "julia --project=. -e 'using Pkg; Pkg.resolve()'", description = "resolve root environment" }
+
+# update
+update = { cmd = "julia --project=. -e 'using Pkg; Pkg.update()'", description = "update root environment" }
+
+# precompile
+precompile = { cmd="julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()'", description = "precompile root environment" }
+
+# install
+install-kernel = { cmd = "julia --project=. scripts/install-pixi-kernel.jl --overwrite", description = "install Jupyter kernel " }
+
+[dependencies]
+juliaup = ">=1.17.21,<2"
+
+[activation.env]
+JULIA_PROJECT = "@."
+JULIAUP_CHANNEL = "1.11.6"
+
+[target.unix.activation]
+scripts = ["scripts/bootstrap-julia.sh"]
+
+[target.unix.activation.env]
+# this put the .julia directory typically available in ~/.julia
+# to the conda prefix that the pixi environment resides in
+JULIA_DEPOT_PATH = "$CONDA_PREFIX/.julia"
+JULIAUP_DEPOT_PATH = "$CONDA_PREFIX/.julia"
+
+[target.win.activation]
+scripts = ["scripts/bootstrap-julia.bat"]
+
+[target.win.activation.env]
+# this put the .julia directory typically available in ~/.julia
+# to the conda prefix that the pixi environment resides in
+JULIA_DEPOT_PATH = "%CONDA_PREFIX%\\.julia"
+JULIAUP_DEPOT_PATH = "%CONDA_PREFIX%\\.julia"
