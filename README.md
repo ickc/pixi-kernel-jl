@@ -15,7 +15,6 @@ Julia projects are reproducible at the package-environment level (for example, `
 
 - Installs a Jupyter kernel named `Julia (Pixi)` which launches Julia from the Pixi-managed runtime.
 - Includes a Pixi template showing how to pin a Julia release/channel (via `JULIAUP_CHANNEL`) and bootstrap that runtime for reproducible notebooks.
-- Lightweight — the kernel install creates a symlink to this repository so the clone must remain available (current behavior; option to copy instead may be added later).
 
 ## Requirements
 
@@ -36,7 +35,7 @@ Julia projects are reproducible at the package-environment level (for example, `
 
         pixi run install-kernel
 
-Be patient — on a cold start the installation may take around 90 seconds. The install currently creates a symlink inside your Jupyter kernels directory that points back to this clone. If you delete or move the clone, the kernel will stop working.
+Be patient — on a cold start the installation may take around 90 seconds.
 
 By default, the install will create or overwrite a kernel named `pixi-kernel-jl` inside your Jupyter kernels directory. You can confirm the installed kernels with:
 
@@ -49,7 +48,6 @@ By default, the install will create or overwrite a kernel named `pixi-kernel-jl`
 
 ## Notes and limitations
 
-- The install currently creates a symlink to this repository inside your Jupyter kernels directory. Keep this clone around if you want the kernel to remain available.
 - The current approach is specific to Julia. The same technique does not directly work for Python kernels (see related projects for Python/R approaches).
 - This repository provides a template and a convenience kernel install; adapt or fork it for project-specific needs.
 
@@ -63,7 +61,6 @@ By default, the install will create or overwrite a kernel named `pixi-kernel-jl`
 
 - If the kernel fails to start, ensure:
     - Pixi is correctly installed and `pixi run` works on your machine.
-    - The clone of this repository has not been moved or removed (because the kernel spec uses a symlink).
 
 If you need help debugging a failure, collect the output from launching the kernel (or running the launcher script directly) and open an issue or pull request with the details.
 
