@@ -47,9 +47,9 @@ jobs:
         with:
           path: |
             .pixi/envs
-          key: ${{ runner.os }}-${{ matrix.pixi-version }}-${{ hashFiles('Project.toml', 'Manifest.toml', 'pixi.toml', 'pixi.lock') }}
+          key: ${{ matrix.os }}-${{ matrix.pixi-version }}-${{ hashFiles('Project.toml', 'Manifest.toml', 'pixi.toml', 'pixi.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.pixi-version }}-
+            ${{ matrix.os }}-${{ matrix.pixi-version }}-
 
       - name: Install dependencies and precompile
         if: steps.cache-environment.outputs.cache-hit != 'true'
