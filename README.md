@@ -7,6 +7,16 @@ This repository has two related goals:
 1. Provide a Jupyter kernel that automatically uses the Julia from your Pixi environment.
 2. Offer a template to bootstrap and pin a Julia version inside a Pixi configuration so your notebooks use the intended Julia runtime.
 
+## Important: bootstrap Julia before other Julia tasks
+
+This project changed how the Julia runtime is prepared inside the Pixi environment. You must run the `bootstrap-julia` task before running other Julia-related tasks (for example `precompile`, `install-kernel`, `resolve`, or `update`). The bootstrap step installs the pinned Julia runtime (via `juliaup`) into the Pixi-managed prefix so subsequent Julia invocations use the intended runtime and depot paths.
+
+If you skip `pixi run bootstrap-julia` you will see cryptic error like this:
+
+    ERROR: `1.11.7` from environment variable JULIAUP_CHANNEL is not installed. Please run `juliaup add 1.11.7` to install channel or version.
+
+Run the bootstrap step once after creating or restoring the Pixi environment (for example after a fresh checkout or when the environment cache is not restored).
+
 ## Motivation
 
 Julia projects are reproducible at the package-environment level (for example, `julia --project=@.` will find the environment by searching up the directory tree). However, reproducing the exact Julia *runtime* version used to run that environment is still manual and error-prone. This project helps by providing a kernel and bootstrap pattern that ensures the Julia binary used by Jupyter comes from the pinned Pixi configuration.
@@ -33,7 +43,10 @@ Julia projects are reproducible at the package-environment level (for example, `
 
 3. Run the install script through Pixi:
 
-        pixi run install-kernel
+    ```sh
+    pixi run bootstrap-julia
+    pixi run install-kernel
+    ```
 
 Be patient — on a cold start the installation may take around 90 seconds.
 
@@ -61,6 +74,7 @@ By default, the install will create or overwrite a kernel named `pixi-kernel-jl`
 
 - If the kernel fails to start, ensure:
     - Pixi is correctly installed and `pixi run` works on your machine.
+    - You have run `pixi run bootstrap-julia` after the environment was created or restored. Without bootstrapping the Julia runtime, later Julia tasks may fail.
 
 If you need help debugging a failure, collect the output from launching the kernel (or running the launcher script directly) and open an issue or pull request with the details.
 
