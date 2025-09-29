@@ -10,25 +10,22 @@ jobs:
       fail-fast: false
       matrix:
         # https://docs.github.com/en/actions/reference/github-hosted-runners-reference#standard-github-hosted-runners-for-public-repositories
-        include:
+        os:
           # Linux-arm64
-          - os: ubuntu-24.04-arm
-            architecture: arm64
+          - ubuntu-24.04-arm
           # Linux-x64
-          - os: ubuntu-latest
-            architecture: x64
+          - ubuntu-latest
           # macOS-arm64
-          - os: macos-latest
-            architecture: arm64
+          - macos-latest
           # macOS-x64
-          - os: macos-15-intel
-            architecture: x64
+          - macos-15-intel
           # Windows-arm64
-          - os: windows-11-arm
-            architecture: arm64
+          - windows-11-arm
           # Windows-x64
-          - os: windows-latest
-            architecture: x64
+          - windows-latest
+        pixi-version:
+          - v0.54.2
+          - v0.55.0
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -39,7 +36,7 @@ jobs:
         with:
           # c.f. https://github.com/prefix-dev/pixi/issues/4657
           # do not allow pixi>=0.55
-          pixi-version: v0.54.2
+          pixi-version: ${{ matrix.pixi-version }}
           # we will use our own cache below
           cache: false
 
@@ -50,9 +47,9 @@ jobs:
         with:
           path: |
             .pixi/envs
-          key: ${{ runner.os }}-${{ matrix.architecture }}-julia-${{ hashFiles('Project.toml', 'Manifest.toml', 'pixi.toml', 'pixi.lock') }}
+          key: ${{ runner.os }}-julia-${{ hashFiles('Project.toml', 'Manifest.toml', 'pixi.toml', 'pixi.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.architecture }}-julia-
+            ${{ runner.os }}-julia-
 
       - name: Install dependencies and precompile
         if: steps.cache-environment.outputs.cache-hit != 'true'
