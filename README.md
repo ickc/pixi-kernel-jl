@@ -53,7 +53,7 @@ By default, the install will create or overwrite a kernel named `pixi-kernel-jl`
 - The current flow expects a `Manifest.toml` file to exist in the project root that contains a `julia_version` entry. The bootstrap scripts read that value and use it to set `JULIAUP_CHANNEL` so the correct Julia runtime is installed in the Pixi environment.
 - If you are setting up a new Julia project and do not yet have a `Manifest.toml`, the bootstrap will fail because there is nothing to read. To allow bootstrapping in that case, create a minimal `Manifest.toml` at the project root with a single line specifying the desired Julia runtime, for example:
 
-    `julia_version = "1.11.6"  # <- desired version`
+    `julia_version = "1.11.7"  # <- desired version`
 
   After creating this file you can run the Pixi bootstrap/install steps (for example, `pixi run precompile`) and the system will use that `julia_version` to install and pin the Julia runtime. Once the full Julia environment is created (the normal package manager operations run), the real `Manifest.toml` produced by Julia/Pkg will replace this placeholder file — so the single-line file is just a temporary helper to get the bootstrap started.
 
