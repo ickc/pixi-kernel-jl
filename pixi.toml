@@ -20,11 +20,11 @@ test = { cmd = "julia --project=. test/runtests.jl", description = "run tests" }
 echo = { cmd = "echo JULIA_PROJECT=$JULIA_PROJECT JULIAUP_CHANNEL=$JULIAUP_CHANNEL JULIA_DEPOT_PATH=$JULIA_DEPOT_PATH JULIAUP_DEPOT_PATH=$JULIAUP_DEPOT_PATH", description = "print environment variables" }
 
 [dependencies]
+python = ">=3.11"
 juliaup = ">=1.17.21,<2"
 
 [activation.env]
 JULIA_PROJECT = "@."
-JULIAUP_CHANNEL = "1.11.6"
 
 [target.unix.activation]
 scripts = ["scripts/bootstrap-julia.sh"]
