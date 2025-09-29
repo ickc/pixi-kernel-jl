@@ -53,7 +53,9 @@ jobs:
 
       - name: Install dependencies and precompile
         if: steps.cache-environment.outputs.cache-hit != 'true'
-        run: pixi run precompile
+        run: |
+          pixi run bootstrap-julia
+          pixi run precompile
       - name: debug info
         run: pixi run echo
       - name: Run unit tests

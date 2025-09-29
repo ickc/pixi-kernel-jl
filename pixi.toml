@@ -3,6 +3,9 @@ channels = ["conda-forge"]
 platforms = ["win-64", "linux-64", "linux-aarch64", "osx-64", "osx-arm64"]
 
 [tasks]
+# bootstrap
+bootstrap-julia = { cmd = "juliaup add $JULIAUP_CHANNEL", description = "install julia version specified by JULIAUP_CHANNEL" }
+
 # resolve
 resolve = { cmd = "julia --project=. -e 'using Pkg; Pkg.resolve()'", description = "resolve root environment" }
 
@@ -20,23 +23,17 @@ test = { cmd = "julia --project=. test/runtests.jl", description = "run tests" }
 echo = { cmd = "echo JULIA_PROJECT=$JULIA_PROJECT JULIAUP_CHANNEL=$JULIAUP_CHANNEL JULIA_DEPOT_PATH=$JULIA_DEPOT_PATH JULIAUP_DEPOT_PATH=$JULIAUP_DEPOT_PATH", description = "print environment variables" }
 
 [dependencies]
-python = ">=3.11"
 juliaup = ">=1.17.21,<2"
 
 [activation.env]
 JULIA_PROJECT = "@."
-
-[target.unix.activation]
-scripts = ["scripts/bootstrap-julia.sh"]
+JULIAUP_CHANNEL = "1.11.7"
 
 [target.unix.activation.env]
 # this put the .julia directory typically available in ~/.julia
 # to the conda prefix that the pixi environment resides in
 JULIA_DEPOT_PATH = "$CONDA_PREFIX/.julia"
 JULIAUP_DEPOT_PATH = "$CONDA_PREFIX/.julia"
-
-[target.win.activation]
-scripts = ["scripts/bootstrap-julia.bat"]
 
 [target.win.activation.env]
 # this put the .julia directory typically available in ~/.julia
