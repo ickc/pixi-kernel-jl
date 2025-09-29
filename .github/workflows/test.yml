@@ -1,0 +1,63 @@
+name: Test
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  run-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        # https://docs.github.com/en/actions/reference/github-hosted-runners-reference#standard-github-hosted-runners-for-public-repositories
+        include:
+          # Linux-arm64
+          - os: ubuntu-24.04-arm
+            architecture: arm64
+          # Linux-x64
+          - os: ubuntu-latest
+            architecture: x64
+          # macOS-arm64
+          - os: macos-latest
+            architecture: arm64
+          # macOS-x64
+          - os: macos-15-intel
+            architecture: x64
+          # Windows-arm64
+          - os: windows-11-arm
+            architecture: arm64
+          # Windows-x64
+          - os: windows-latest
+            architecture: x64
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - uses: prefix-dev/setup-pixi@v0.9.1
+        with:
+          # c.f. https://github.com/prefix-dev/pixi/issues/4657
+          # do not allow pixi>=0.55
+          pixi-version: v0.54.2
+          # we will use our own cache below
+          cache: false
+
+      # Add Julia cache with outputs for cache hit
+      - name: Cache environment
+        id: cache-environment
+        uses: actions/cache@v4
+        with:
+          path: |
+            .pixi/envs
+          key: ${{ runner.os }}-${{ matrix.architecture }}-julia-${{ hashFiles('Project.toml', 'Manifest.toml', 'pixi.toml', 'pixi.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.architecture }}-julia-
+
+      - name: Install dependencies and precompile
+        if: steps.cache-environment.outputs.cache-hit != 'true'
+        run: pixi run precompile
+      - name: debug info
+        run: pixi run echo
+      - name: Run unit tests
+        run: pixi run test
