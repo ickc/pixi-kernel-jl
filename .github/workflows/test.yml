@@ -30,9 +30,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
-      - uses: prefix-dev/setup-pixi@v0.9.1
+      - uses: prefix-dev/setup-pixi@v0.9.3
         with:
           # c.f. https://github.com/prefix-dev/pixi/issues/4657
           # do not allow pixi>=0.55
@@ -43,7 +43,7 @@ jobs:
       # Add Julia cache with outputs for cache hit
       - name: Cache environment
         id: cache-environment
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             .pixi/envs
